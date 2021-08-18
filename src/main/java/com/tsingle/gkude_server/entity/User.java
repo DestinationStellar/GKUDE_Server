@@ -1,17 +1,41 @@
 package com.tsingle.gkude_server.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-@Data
-@AllArgsConstructor
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name = "user")
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    @NonNull
     private String username;
+    @NonNull
     private String password;
+
+
     @Override
-    public String toString()
-    {
-        return "id:"+id+"\n"+"username"+username+"\npassword"+password+"\n";
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -15,29 +16,33 @@ public class UserService {
 
     public boolean save(User user)
     {
-        Long id = user.getId();
-        User currentUser = select(id);
-        if(currentUser != null)
-            return mapper.update(user) == 1;
-        return mapper.insert(user) == 1;
+       mapper.save(user);
+       return mapper.existsById(user.getId());
     }
 
     public boolean delete(Long id)
     {
-        return mapper.deleteById(id) == 1;
+        mapper.deleteById(id);
+        return !mapper.existsById(id);
     }
 
     public boolean deleteAll() {
-        return mapper.deleteAll() == 1;
+        mapper.deleteAll();
+        return mapper.count() == 0L;
     }
 
-    public User select(Long id)
+    public Optional<User> findById(Long id)
     {
-        return mapper.selectById(id);
+        return mapper.findById(id);
     }
 
-    public List<User> selectAll()
+    public Optional<User> findByUserName(String username)
     {
-        return mapper.selectAll();
+        return mapper.findByUsername(username);
+    }
+
+    public List<User> findAll()
+    {
+        return mapper.findAll();
     }
 }

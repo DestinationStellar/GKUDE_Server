@@ -1,28 +1,16 @@
 package com.tsingle.gkude_server.dao;
 
 import com.tsingle.gkude_server.entity.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
-import org.springframework.stereotype.Component;
+import lombok.NonNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-@Mapper
-@Component
-public interface UserMapper {
-    @Select("select * from user where id=#{id}")
-    User selectById(@Param("id") Long id);
 
-    @Select("select * from user")
-    List<User> selectAll();
-
-    int insert(@Param("user") User user);
-
-    int deleteById(@Param("id") Long id);
-
-    int deleteAll();
-
-    int update(@Param("user") User user);
+@Repository
+public interface UserMapper extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+    Optional<User> findByUsername(@NonNull String username);
 }

@@ -26,11 +26,11 @@ public class UserController {
 
     @GetMapping("select")
     public User select(@RequestParam Long id) {
-        return service.select(id);
+        return service.findById(id).orElse(null);
     }
 
     @GetMapping("selectAll")
     public List<User> selectAll() {
-        return service.selectAll();
+        return service.findAll();
     }
 }

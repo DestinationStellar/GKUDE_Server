@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -17,25 +18,27 @@ class GkudeServerApplicationTests {
     @Test
     void UserDatabaseTest() {
         service.deleteAll();
+        service.save(new User("Tom", "123456"));
+        service.save(new User("Jack", "123456"));
+        service.save(new User("Rose", "123456"));
 
-        service.save(new User(100L, "Tom", "123456"));
-        service.save(new User(101L, "Jack", "123456"));
-        service.save(new User(102L, "Rose", "123456"));
+        Optional<User> user = service.findByUserName("Jack");
+        Assertions.assertTrue(user.isPresent());
+        Assertions.assertEquals(user.get().getPassword(), "123456");
 
-        User user = service.select(101L);
-        Assertions.assertEquals(user.getUsername(), "Jack");
+        user.get().setUsername("Jackson");
+        service.save(user.get());
 
-        service.save(new User(101L, "Jackson", "123456"));
+        user = service.findById(2L);
+        Assertions.assertTrue(user.isPresent());
+        Assertions.assertEquals(user.get().getUsername(), "Jackson");
 
-        user = service.select(101L);
-        Assertions.assertEquals(user.getUsername(), "Jackson");
-
-        List<User> userList = service.selectAll();
+        List<User> userList = service.findAll();
         Assertions.assertEquals(userList.size(), 3);
 
-        service.delete(102L);
+        service.delete(3L);
 
-        userList = service.selectAll();
+        userList = service.findAll();
         Assertions.assertEquals(userList.size(), 2);
     }
 
