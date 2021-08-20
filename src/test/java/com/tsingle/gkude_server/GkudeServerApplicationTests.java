@@ -1,7 +1,7 @@
 package com.tsingle.gkude_server;
 
+import com.tsingle.gkude_server.dao.UserMapper;
 import com.tsingle.gkude_server.entity.User;
-import com.tsingle.gkude_server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,31 +14,31 @@ import java.util.Optional;
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class GkudeServerApplicationTests {
-    private final UserService service;
+    private final UserMapper mapper;
     @Test
     void UserDatabaseTest() {
-        service.deleteAll();
-        service.save(new User("Tom", "123456"));
-        service.save(new User("Jack", "123456"));
-        service.save(new User("Rose", "123456"));
+        mapper.deleteAll();
+        mapper.save(new User("Tom", "123456"));
+        mapper.save(new User("Harry", "123456"));
+        mapper.save(new User("Lily", "123456"));
 
-        Optional<User> user = service.findByUserName("Jack");
+        Optional<User> user = mapper.findByUsername("Harry");
         Assertions.assertTrue(user.isPresent());
         Assertions.assertEquals(user.get().getPassword(), "123456");
 
-        user.get().setUsername("Jackson");
-        service.save(user.get());
+        user.get().setUsername("Hermione");
+        mapper.save(user.get());
 
-        user = service.findById(2L);
+        user = mapper.findById(2L);
         Assertions.assertTrue(user.isPresent());
-        Assertions.assertEquals(user.get().getUsername(), "Jackson");
+        Assertions.assertEquals(user.get().getUsername(), "Hermione");
 
-        List<User> userList = service.findAll();
+        List<User> userList = mapper.findAll();
         Assertions.assertEquals(userList.size(), 3);
 
-        service.delete(3L);
+        mapper.deleteById(3L);
 
-        userList = service.findAll();
+        userList = mapper.findAll();
         Assertions.assertEquals(userList.size(), 2);
     }
 
