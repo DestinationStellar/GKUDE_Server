@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService service;
 
-    @PostMapping("signup")
-    public JsonResponse signup(@RequestParam("username") String username, @RequestParam("password") String password) {
-        return service.signup(username, password);
-    }
-
     @PostMapping("login")
     public JsonResponse login(@RequestParam("username") String username, @RequestParam("password") String password) {
         return service.login(username, password);

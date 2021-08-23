@@ -12,6 +12,6 @@ public class ApiConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new AuthorizationInterceptor());
         registration.addPathPatterns("/**");
-        registration.excludePathPatterns("/api/login","/api/signup");
+        registration.excludePathPatterns("/api/login");
     }
 }

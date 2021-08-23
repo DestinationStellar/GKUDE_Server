@@ -28,40 +28,22 @@ public class UserService {
     @NonNull
     private HttpServletResponse response;
 
-    public JsonResponse signup(String username, String password) {
+    public JsonResponse login(String username, String password) {
         Optional<User> optionalUser = mapper.findByUsername(username);
-        if (optionalUser.isPresent()) {
-            return new JsonResponse(ResponseConfig.BAD_REQUEST.getStatus(),
-                    ResponseConfig.BAD_REQUEST.getMessage(), "User already exists.");
+        User user;
+        if (optionalUser.isEmpty()) {
+            user = mapper.save(new User(username, MD5Util.getMD5(password)));
+        } else {
+            if (!MD5Util.getMD5(password).equals(optionalUser.get().getPassword())) {
+                return new JsonResponse(ResponseConfig.BAD_REQUEST.getStatus(),
+                        ResponseConfig.BAD_REQUEST.getMessage(), "Wrong password.");
+            }
+            user = optionalUser.get();
         }
-        User user = mapper.save(new User(username, MD5Util.getMD5(password)));
+
         try {
             Map<String, Object> claims = new HashMap<>();
             claims.put(JwtUtil.keyUserId, user.getId());
-            long tokenFailureTime = 30 * 24 * 60 * 60L;
-            String token = JwtUtil.createJWT(claims, "", "", "", tokenFailureTime);
-            return new JsonResponse(ResponseConfig.OK.getStatus(), ResponseConfig.OK.getMessage(), token);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new JsonResponse(ResponseConfig.INTERNAL_SERVER_ERROR.getStatus(),
-                    ResponseConfig.INTERNAL_SERVER_ERROR.getMessage());
-        }
-    }
-
-    public JsonResponse login(String username, String password) {
-        Optional<User> optionalUser = mapper.findByUsername(username);
-        if (optionalUser.isEmpty()) {
-            return new JsonResponse(ResponseConfig.BAD_REQUEST.getStatus(),
-                    ResponseConfig.BAD_REQUEST.getMessage(), "User not found.");
-        }
-        if (!MD5Util.getMD5(password).equals(optionalUser.get().getPassword())) {
-            return new JsonResponse(ResponseConfig.BAD_REQUEST.getStatus(),
-                    ResponseConfig.BAD_REQUEST.getMessage(), "Wrong password.");
-        }
-        try {
-            Map<String, Object> claims = new HashMap<>();
-            claims.put(JwtUtil.keyUserId, optionalUser.get().getId());
             long tokenFailureTime = 30 * 24 * 60 * 60L;
 
             String token = JwtUtil.createJWT(claims, UUID.randomUUID().toString(), "GKUDE_Server", "User", tokenFailureTime);
