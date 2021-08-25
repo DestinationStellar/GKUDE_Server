@@ -3,7 +3,7 @@ package com.tsingle.gkude_server.configs;
 import com.tsingle.gkude_server.utils.JsonResponse;
 import com.tsingle.gkude_server.utils.JsonUtil;
 import com.tsingle.gkude_server.utils.JwtUtil;
-import com.tsingle.gkude_server.utils.ResponseConfig;
+import com.tsingle.gkude_server.utils.ResponseUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,14 +20,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             String token = request.getHeader("token");
             if (token != null && token.length() > 0) {
                 Claims c = JwtUtil.parseJWT(token);
-                Long userId = c.get(JwtUtil.keyUserId, Long.class);
                 request.setAttribute("userId", c.get(JwtUtil.keyUserId, Long.class));
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JsonResponse responseInfo = new JsonResponse(ResponseConfig.FORBIDDEN.getStatus(), ResponseConfig.FORBIDDEN.getMessage());
+        JsonResponse responseInfo = new JsonResponse(ResponseUtil.FORBIDDEN.getStatus(), ResponseUtil.FORBIDDEN.getMessage());
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");

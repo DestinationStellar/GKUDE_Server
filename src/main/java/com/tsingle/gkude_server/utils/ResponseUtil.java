@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ResponseConfig {
+public enum ResponseUtil {
     OK(200, "OK!"),
     CREATED(201, "Created!"),
     ACCEPTED(202, "Accepted!"),
