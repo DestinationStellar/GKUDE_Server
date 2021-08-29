@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JsonResponse {
+public class JsonResponse <T> {
     @NonNull
     private Integer status;
     @NonNull
     private String msg;
-    private Object data;
+    private T data;
 }

@@ -2,7 +2,6 @@ package com.tsingle.gkude_server.service;
 
 
 import com.tsingle.gkude_server.httpclient.EdukgClient;
-import com.tsingle.gkude_server.utils.EdukgResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
