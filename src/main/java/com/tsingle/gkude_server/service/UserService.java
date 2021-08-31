@@ -50,7 +50,7 @@ public class UserService {
         try {
             Map<String, Object> claims = new HashMap<>();
             claims.put(JwtUtil.keyUserId, user.getId());
-            long tokenFailureTime = 30 * 24 * 60 * 60L;
+            long tokenFailureTime = 30 * 24 * 60 * 60 * 1000L;
 
             String token = JwtUtil.createJWT(claims, UUID.randomUUID().toString(), "GKUDE_Server", "User", tokenFailureTime);
             return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), token);
@@ -158,7 +158,11 @@ public class UserService {
             return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
                     ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
         }
-        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), optionalUser.get().getFavorites());
+        List<EdukgEntity> list = new ArrayList<>();
+        for(Favorite f: optionalUser.get().getFavorites()) {
+            list.add(f.getEdukgEntity());
+        }
+        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), list);
     }
 
     public JsonResponse<?> addHistory(EdukgEntity entity) {
@@ -171,6 +175,8 @@ public class UserService {
         Optional<EdukgEntity> optionalEdukgEntity = edukgEntityMapper.findEdukgEntityByUri(entity.getUri());
         if (optionalEdukgEntity.isEmpty()) {
             entity = edukgEntityMapper.save(entity);
+        } else {
+            entity = optionalEdukgEntity.get();
         }
         history.setEdukgEntity(entity);
         User user = optionalUser.get();
@@ -188,7 +194,11 @@ public class UserService {
             return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
                     ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
         }
-        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), optionalUser.get().getHistories());
+        List<EdukgEntity> list = new ArrayList<>();
+        for (History h: optionalUser.get().getHistories()) {
+            list.add(h.getEdukgEntity());
+        }
+        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), list);
     }
 
 }

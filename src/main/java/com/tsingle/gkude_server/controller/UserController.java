@@ -24,18 +24,21 @@ public class UserController {
     }
 
     @PostMapping("update/password")
-    public JsonResponse<?> updatePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
+    public JsonResponse<?> updatePassword(@RequestParam("oldPassword") String oldPassword,
+                                          @RequestParam("newPassword") String newPassword) {
         return service.updatePassword(oldPassword, newPassword);
     }
 
     @PostMapping("favorite/add")
-    public JsonResponse<?> addFavorite(@RequestParam("data") EdukgEntity entity) {
-        return service.addFavorite(entity);
+    public JsonResponse<?> addFavorite(@RequestParam("uri") String uri, @RequestParam("label") String label,
+                                       @RequestParam("course") String course, @RequestParam("category") String category) {
+        return service.addFavorite(new EdukgEntity(uri, label, category, course));
     }
 
     @PostMapping("favorite/cancel")
-    public JsonResponse<?> cancelFavorite(@RequestParam("data") EdukgEntity entity) {
-        return service.cancelFavorite(entity);
+    public JsonResponse<?> cancelFavorite(@RequestParam("uri") String uri, @RequestParam("label") String label,
+                                          @RequestParam("course") String course, @RequestParam("category") String category) {
+        return service.cancelFavorite(new EdukgEntity(uri, label, category, course));
     }
 
     @GetMapping("favorite/get")
@@ -44,8 +47,9 @@ public class UserController {
     }
 
     @PostMapping("history/add")
-    public JsonResponse<?> addHistory(@RequestParam("data") EdukgEntity entity) {
-        return service.addHistory(entity);
+    public JsonResponse<?> addHistory(@RequestParam("uri") String uri, @RequestParam("label") String label,
+                                      @RequestParam("course") String course, @RequestParam("category") String category) {
+        return service.addHistory(new EdukgEntity(uri, label, category, course));
     }
 
     @GetMapping("history/get")

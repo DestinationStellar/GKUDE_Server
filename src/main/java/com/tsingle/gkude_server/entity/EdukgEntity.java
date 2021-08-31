@@ -1,18 +1,17 @@
 package com.tsingle.gkude_server.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "edukg_entity")
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class EdukgEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,25 +30,8 @@ public class EdukgEntity {
     private String category;
 
     @Column
-    private String description;
-
-    @Column
+    @NonNull
     private String course;
-
-    @Column
-    private boolean visited;
-
-    @Column
-    @Lob
-    private String relationStore;
-
-    @Column
-    @Lob
-    private String propertyStore;
-
-    @Column
-    @Lob
-    private String problemStore;
 
     @Override
     public boolean equals(Object o) {
