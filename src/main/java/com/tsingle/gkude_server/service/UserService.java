@@ -111,8 +111,8 @@ public class UserService {
             entity = optionalEdukgEntity.get();
             for (Favorite f: user.getFavorites()) {
                 if (f.getEdukgEntity().equals(entity)) {
-                    return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
-                            ResponseUtil.BAD_REQUEST.getMessage(), "Already add favorite.");
+                    return new JsonResponse<>(ResponseUtil.ACCEPTED.getStatus(),
+                            ResponseUtil.ACCEPTED.getMessage(), "Already add favorite.");
                 }
             }
         } else {
@@ -136,8 +136,8 @@ public class UserService {
         }
         Optional<EdukgEntity> optionalEdukgEntity = edukgEntityMapper.findEdukgEntityByUri(entity.getUri());
         if (optionalEdukgEntity.isEmpty()) {
-            return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
-                    ResponseUtil.BAD_REQUEST.getMessage(), "Entity doesn't exist.");
+            return new JsonResponse<>(ResponseUtil.ACCEPTED.getStatus(),
+                    ResponseUtil.ACCEPTED.getMessage(), "Entity doesn't exist.");
         }
         User user = optionalUser.get();
         EdukgEntity edukgEntity = optionalEdukgEntity.get();
@@ -156,7 +156,7 @@ public class UserService {
         Optional<User> optionalUser = userMapper.findById((Long) request.getAttribute("userId"));
         if (optionalUser.isEmpty()) {
             return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
-                    ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
+                    ResponseUtil.BAD_REQUEST.getMessage(), null);
         }
         List<EdukgEntity> list = new ArrayList<>();
         for(Favorite f: optionalUser.get().getFavorites()) {
@@ -192,7 +192,7 @@ public class UserService {
         Optional<User> optionalUser = userMapper.findById((Long) request.getAttribute("userId"));
         if (optionalUser.isEmpty()) {
             return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
-                    ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
+                    ResponseUtil.BAD_REQUEST.getMessage(), null);
         }
         List<EdukgEntity> list = new ArrayList<>();
         for (History h: optionalUser.get().getHistories()) {
