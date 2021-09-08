@@ -94,7 +94,7 @@ public class UserService {
             return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
                     ResponseUtil.BAD_REQUEST.getMessage(), "Wrong password.");
         }
-        user.setPassword(newPassword);
+        user.setPassword(MD5Util.getMD5(newPassword));
         userMapper.save(user);
         return new JsonResponse<String>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage());
     }
