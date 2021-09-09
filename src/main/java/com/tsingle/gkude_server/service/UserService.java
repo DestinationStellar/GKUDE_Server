@@ -204,14 +204,20 @@ public class UserService {
                     ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
         }
         WrongProblem wrongProblem = new WrongProblem();
+        User user = optionalUser.get();
         Optional<Problem> optionalProblem = problemMapper.findProblemByQid(problem.getQid());
         if (optionalProblem.isEmpty()) {
             problem = problemMapper.save(problem);
         } else {
             problem = optionalProblem.get();
+            for (WrongProblem w: user.getWrongProblems()) {
+                if (w.getProblem().equals(problem)) {
+                    return new JsonResponse<>(ResponseUtil.ACCEPTED.getStatus(),
+                            ResponseUtil.ACCEPTED.getMessage(), "Already add problem.");
+                }
+            }
         }
         wrongProblem.setProblem(problem);
-        User user = optionalUser.get();
         wrongProblem.setUser(user);
         user.getWrongProblems().add(wrongProblem);
 

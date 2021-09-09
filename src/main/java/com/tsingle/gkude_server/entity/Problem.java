@@ -1,8 +1,10 @@
 package com.tsingle.gkude_server.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -25,4 +27,17 @@ public class Problem {
     @Lob
     @NonNull
     private String qAnswer;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Problem problem = (Problem) o;
+        return Objects.equals(qid, problem.qid);
+    }
+
+    @Override
+    public int hashCode() {
+        return qid.hashCode();
+    }
 }
