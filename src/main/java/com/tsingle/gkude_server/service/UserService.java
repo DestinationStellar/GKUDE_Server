@@ -1,13 +1,7 @@
 package com.tsingle.gkude_server.service;
 
-import com.tsingle.gkude_server.dao.EdukgEntityMapper;
-import com.tsingle.gkude_server.dao.FavoriteMapper;
-import com.tsingle.gkude_server.dao.HistoryMapper;
-import com.tsingle.gkude_server.dao.UserMapper;
-import com.tsingle.gkude_server.entity.EdukgEntity;
-import com.tsingle.gkude_server.entity.Favorite;
-import com.tsingle.gkude_server.entity.History;
-import com.tsingle.gkude_server.entity.User;
+import com.tsingle.gkude_server.dao.*;
+import com.tsingle.gkude_server.entity.*;
 import com.tsingle.gkude_server.utils.JsonResponse;
 import com.tsingle.gkude_server.utils.JwtUtil;
 import com.tsingle.gkude_server.utils.MD5Util;
@@ -29,6 +23,8 @@ public class UserService {
     private final EdukgEntityMapper edukgEntityMapper;
     private final FavoriteMapper favoriteMapper;
     private final HistoryMapper historyMapper;
+    private final ProblemMapper problemMapper;
+    private final WrongProblemMapper wrongProblemMapper;
     @NonNull
     private HttpServletRequest request;
     @NonNull
@@ -201,4 +197,39 @@ public class UserService {
         return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), list);
     }
 
+    public JsonResponse<?> addWrongProbelm(Problem problem) {
+        Optional<User> optionalUser = userMapper.findById((Long) request.getAttribute("userId"));
+        if (optionalUser.isEmpty()) {
+            return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
+                    ResponseUtil.BAD_REQUEST.getMessage(), "User not found.");
+        }
+        WrongProblem wrongProblem = new WrongProblem();
+        Optional<Problem> optionalProblem = problemMapper.findProblemByQid(problem.getQid());
+        if (optionalProblem.isEmpty()) {
+            problem = problemMapper.save(problem);
+        } else {
+            problem = optionalProblem.get();
+        }
+        wrongProblem.setProblem(problem);
+        User user = optionalUser.get();
+        wrongProblem.setUser(user);
+        user.getWrongProblems().add(wrongProblem);
+
+        wrongProblemMapper.save(wrongProblem);
+        userMapper.save(user);
+        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage());
+    }
+
+    public JsonResponse<?> getWrongProblem() {
+        Optional<User> optionalUser = userMapper.findById((Long) request.getAttribute("userId"));
+        if (optionalUser.isEmpty()) {
+            return new JsonResponse<>(ResponseUtil.BAD_REQUEST.getStatus(),
+                    ResponseUtil.BAD_REQUEST.getMessage(), null);
+        }
+        List<Problem> list = new ArrayList<>();
+        for (WrongProblem w: optionalUser.get().getWrongProblems()) {
+            list.add(w.getProblem());
+        }
+        return new JsonResponse<>(ResponseUtil.OK.getStatus(), ResponseUtil.OK.getMessage(), list);
+    }
 }

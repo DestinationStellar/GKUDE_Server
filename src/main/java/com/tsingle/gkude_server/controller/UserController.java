@@ -1,6 +1,7 @@
 package com.tsingle.gkude_server.controller;
 
 import com.tsingle.gkude_server.entity.EdukgEntity;
+import com.tsingle.gkude_server.entity.Problem;
 import com.tsingle.gkude_server.service.UserService;
 import com.tsingle.gkude_server.utils.JsonResponse;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +56,15 @@ public class UserController {
     @GetMapping("history/get")
     public JsonResponse<?> getHistory() {
         return service.getHistory();
+    }
+
+    @PostMapping("wrongProblem/add")
+    public JsonResponse<?> addWrongProblem(@RequestParam("qID") Integer qID, @RequestParam("qBody") String qBody, @RequestParam("qAnswer") String qAnswer) {
+        return service.addWrongProbelm(new Problem(qID, qBody, qAnswer));
+    }
+
+    @GetMapping("wrongProblem/get")
+    public JsonResponse<?> getWrongProblem() {
+        return service.getWrongProblem();
     }
 }
