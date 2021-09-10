@@ -28,6 +28,10 @@ public class Problem {
     @NonNull
     private String qAnswer;
 
+    @Column
+    @NonNull
+    private String course;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

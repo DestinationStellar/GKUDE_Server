@@ -59,8 +59,8 @@ public class UserController {
     }
 
     @PostMapping("wrongProblem/add")
-    public JsonResponse<?> addWrongProblem(@RequestParam("qID") Integer qID, @RequestParam("qBody") String qBody, @RequestParam("qAnswer") String qAnswer) {
-        return service.addWrongProbelm(new Problem(qID, qBody, qAnswer));
+    public JsonResponse<?> addWrongProblem(@RequestParam("qID") Integer qID, @RequestParam("qBody") String qBody, @RequestParam("qAnswer") String qAnswer, @RequestParam("course") String course) {
+        return service.addWrongProbelm(new Problem(qID, qBody, qAnswer, course));
     }
 
     @GetMapping("wrongProblem/get")
