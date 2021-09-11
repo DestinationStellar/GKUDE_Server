@@ -1,5 +1,6 @@
 package com.tsingle.gkude_server.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class EdukgEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("backend_id")
     private Long id;
 
     @Column(unique = true)
